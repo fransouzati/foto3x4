@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ImgList, ComCtrls, ToolWin, Menus, jpeg, ExtCtrls;
+  Dialogs, ImgList, ComCtrls, ToolWin, Menus, jpeg, ExtCtrls, ShellApi;
 
 type
   TForm1 = class(TForm)
@@ -22,6 +22,7 @@ type
     imgPreview: TImage;
     tmPreview: TTimer;
     btBorder: TToolButton;
+    ToolButton2: TToolButton;
     procedure ToolButton1Click(Sender: TObject);
     procedure zoomimgChange(Sender: TObject);
     procedure imgMouseDown(Sender: TObject; Button: TMouseButton;
@@ -43,6 +44,7 @@ type
     procedure FormResize(Sender: TObject);
     procedure tmPreviewTimer(Sender: TObject);
     procedure btBorderClick(Sender: TObject);
+    procedure ToolButton2Click(Sender: TObject);
   private
     imgPos, fotoPos: TPoint;
     procedure Monta3x4;
@@ -293,6 +295,11 @@ begin
   finally
     b10x15.free;
   end;
+end;
+
+procedure TForm1.ToolButton2Click(Sender: TObject);
+begin
+  ShellExecute(0, 'open', 'http://code.google.com/p/foto3x4', nil, nil, SW_SHOWNORMAL);
 end;
 
 end.
