@@ -199,8 +199,8 @@ begin
   if img.Picture.Graphic = nil then
     exit;
   foto.Canvas.Brush.Style := bsClear;
-  foto.Canvas.Pen.Style := psDot;
-  foto.Canvas.Pen.Width := 1;
+  foto.Canvas.Pen.Style := psSolid;
+  foto.Canvas.Pen.Width := 5;
   foto.Canvas.Pen.Color := clWhite;
   foto.Canvas.Pen.Mode := pmXor;
   foto.Canvas.Rectangle(0,0,foto.Width-1, foto.Height-1);
@@ -247,14 +247,15 @@ begin
   Monta10x15;
   Form2.img.Left := 0;
   Form2.img.Top := 0;
-  Form2.zoomImg.Position := 100;
+  Form2.zoomImg.Position := 30;
   Form2.zoomImgChange(nil);
-  Form2.ShowModal;
+  Form2.Show;
 end;
 
 procedure TForm1.Monta10x15;
 var
   b10x15: TBitmap;
+  jpeg: TJpegImage;
   X, Y, PX, PY, W, H: Integer;
 const
   M=3;
@@ -291,7 +292,14 @@ begin
                    );
       end;
 
-    Form2.img.Picture.Assign(b10x15);
+    jpeg := TJpegImage.Create;
+    try
+      jpeg.Assign(b10x15);
+      jpeg.CompressionQuality := 80;
+      Form2.img.Picture.Graphic := jpeg;
+    finally
+      jpeg.free;
+    end;
   finally
     b10x15.free;
   end;
