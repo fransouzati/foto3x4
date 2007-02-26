@@ -1,8 +1,8 @@
 object Form2: TForm2
-  Left = 219
-  Top = 237
-  Width = 870
-  Height = 640
+  Left = 544
+  Top = 480
+  Width = 660
+  Height = 462
   Caption = 'Visualiza'#231#227'o'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -11,13 +11,14 @@ object Form2: TForm2
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  Position = poScreenCenter
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object ToolBar1: TToolBar
     Left = 0
     Top = 0
-    Width = 862
+    Width = 652
     Height = 29
     ButtonHeight = 25
     ButtonWidth = 26
@@ -40,14 +41,15 @@ object Form2: TForm2
       Min = 10
       Position = 100
       TabOrder = 0
+      TickStyle = tsNone
       OnChange = zoomImgChange
     end
   end
   object Panel1: TPanel
     Left = 0
     Top = 29
-    Width = 862
-    Height = 584
+    Width = 652
+    Height = 406
     Align = alClient
     BevelOuter = bvNone
     Caption = ' '
@@ -65,7 +67,7 @@ object Form2: TForm2
   end
   object SaveDialog1: TSaveDialog
     DefaultExt = '.jpg'
-    Filter = 'Jpeg|*.jpg;*jpeg|Bitmap|*.bmp|Todos arquivos|*.*'
+    Filter = 'Jpeg|*.jpg;*jpeg'
     FilterIndex = 0
     Left = 216
     Top = 85

@@ -66,6 +66,7 @@ object Form1: TForm1
       Min = 10
       Position = 100
       TabOrder = 1
+      TickStyle = tsNone
       OnChange = zoomimgChange
     end
     object zoomFoto: TTrackBar
@@ -77,6 +78,7 @@ object Form1: TForm1
       Min = 10
       Position = 100
       TabOrder = 0
+      TickStyle = tsNone
       OnChange = zoomFotoChange
     end
   end
