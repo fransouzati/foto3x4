@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 297
-  Top = 181
+  Left = 245
+  Top = 103
   Width = 760
   Height = 580
   Caption = 'Foto 3x4'
@@ -12,6 +12,7 @@ object Form1: TForm1
   Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
+  ShowHint = True
   OnCreate = FormCreate
   OnResize = FormResize
   PixelsPerInch = 96
@@ -21,7 +22,6 @@ object Form1: TForm1
     Top = 0
     Width = 752
     Height = 29
-    ButtonHeight = 25
     ButtonWidth = 26
     Caption = 'ToolBar1'
     Images = ImageList1
@@ -29,20 +29,49 @@ object Form1: TForm1
     object ToolButton1: TToolButton
       Left = 0
       Top = 2
+      Hint = 'Abrir imagem'
       Caption = 'ToolButton1'
       ImageIndex = 0
       OnClick = ToolButton1Click
     end
-    object ToolButton3: TToolButton
+    object btPreview: TToolButton
       Left = 26
       Top = 2
-      Caption = 'ToolButton3'
+      Hint = 'Gerar'
+      Caption = 'btPreview'
+      Enabled = False
       ImageIndex = 2
-      OnClick = ToolButton3Click
+      OnClick = btPreviewClick
     end
-    object btBorder: TToolButton
+    object Label2: TLabel
       Left = 52
       Top = 2
+      Width = 27
+      Height = 22
+      Hint = 'Tamanho da foto (cm)'
+      Caption = ' Foto '
+      Layout = tlCenter
+    end
+    object edTamFoto: TComboBox
+      Left = 79
+      Top = 2
+      Width = 76
+      Height = 21
+      Hint = 'Tamanho da foto (cm)'
+      Style = csDropDownList
+      ItemHeight = 13
+      TabOrder = 2
+      OnChange = edTamFotoChange
+      Items.Strings = (
+        '3x4cm'
+        '4x3cm'
+        '15x10cm'
+        '10x15cm')
+    end
+    object btBorder: TToolButton
+      Left = 155
+      Top = 2
+      Hint = 'Previsualiza'#231#227'o'
       AllowAllUp = True
       Caption = 'btBorder'
       Down = True
@@ -51,17 +80,19 @@ object Form1: TForm1
       OnClick = btBorderClick
     end
     object ToolButton2: TToolButton
-      Left = 78
+      Left = 181
       Top = 2
+      Hint = 'Site oficial'
       Caption = 'ToolButton2'
       ImageIndex = 4
       OnClick = ToolButton2Click
     end
     object zoomImg: TTrackBar
-      Left = 104
+      Left = 207
       Top = 2
       Width = 150
-      Height = 25
+      Height = 22
+      Hint = 'Zoom geral'
       Max = 400
       Min = 10
       Position = 100
@@ -70,12 +101,13 @@ object Form1: TForm1
       OnChange = zoomimgChange
     end
     object zoomFoto: TTrackBar
-      Left = 254
+      Left = 357
       Top = 2
       Width = 150
-      Height = 25
-      Max = 400
-      Min = 10
+      Height = 22
+      Hint = 'Zoom na foto'
+      Max = 200
+      Min = 50
       Position = 100
       TabOrder = 0
       TickStyle = tsNone
@@ -86,7 +118,7 @@ object Form1: TForm1
     Left = 0
     Top = 29
     Width = 752
-    Height = 524
+    Height = 517
     Align = alClient
     BevelOuter = bvNone
     Caption = ' '
