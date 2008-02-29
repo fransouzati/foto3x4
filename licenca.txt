@@ -1,0 +1,5 @@
+1. Este é um programa livre e gratuito
+2. Este programa é também livre de qualquer Adware, Malware, Trojan ou outro artifício que invada ou agrida sua privacidade
+3. Este programa é distribuido sobre a licença GPL, que te permite copiá-lo e distribuí-lo a quem você quiser.
+4. Se você quiser modificar este programa, você pode baixar os fontes pelo endereço http://code.google.com/p/foto3x4/source/checkout 
+5. A Qualiom Sistemas Computacionais não oferece suporte técnico a este programa, assim como não garante que ele irá atender às suas necessidades.
