@@ -5,7 +5,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ImgList, ComCtrls, ToolWin, Menus, jpeg, ExtCtrls, ShellApi,
-  StdCtrls;
+  StdCtrls, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
+  IdHTTP;
 
 type
   TForm1 = class(TForm)
@@ -26,6 +27,9 @@ type
     ToolButton2: TToolButton;
     edTamFoto: TComboBox;
     Label2: TLabel;
+    novaversao: TPanel;
+    Label1: TLabel;
+    Label3: TLabel;
     procedure ToolButton1Click(Sender: TObject);
     procedure zoomimgChange(Sender: TObject);
     procedure imgMouseDown(Sender: TObject; Button: TMouseButton;
@@ -47,9 +51,9 @@ type
     procedure tmPreviewTimer(Sender: TObject);
     procedure btBorderClick(Sender: TObject);
     procedure ToolButton2Click(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure edTamFotoChange(Sender: TObject);
     procedure edPapelChange(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     imgPos, fotoPos: TPoint;
     fotoW: Integer;
@@ -66,7 +70,10 @@ type
 
 var
   Form1: TForm1;
-
+const
+  versao=
+{$INCLUDE versao.txt}
+;  
 implementation
 
 uses preview;
@@ -83,10 +90,41 @@ begin
  result := MulDiv(GetDeviceCaps(Device, LOGPIXELSY), 10 * Millims, 254);
 end;
 
-procedure TForm1.FormCreate(Sender: TObject);
+type
+  TemNovaVersao=class(TThread)
+  protected
+    procedure novaversao;
+    procedure Execute; override;
+  public
+  end;
+
+{ TemNovaVersao }
+
+procedure TemNovaVersao.Execute;
+var
+  IdHTTP1: TIdHTTP;
+  versaoSite: Integer;
 begin
-  edTamFoto.ItemIndex := 0;
+  IdHTTP1 := TIdHTTP.Create(nil);
+  try
+    versaoSite := StrToIntDef(IdHTTP1.Get('http://fotos3x4.googlepages.com/versao.txt'), -1);
+    if versaoSite > versao then
+      Synchronize(novaversao);
+  finally
+    IdHTTP1.Free;
+  end;
+end;
+
+procedure TemNovaVersao.novaversao;
+begin
+  Form1.novaversao.Show;
+end;
+  
+procedure TForm1.FormShow(Sender: TObject);
+begin
+  edTamFoto.ItemIndex := edTamFoto.Items.IndexOf('3x4cm');
   edTamFotoChange(nil);
+  TemNovaVersao.Create(False);
 end;
 
 procedure TForm1.edTamFotoChange(Sender: TObject);
@@ -107,25 +145,16 @@ begin
 end;
 
 procedure TForm1.calculaTamanho(idx: Integer; var Width, Height: Integer);
+var
+  S: String;
+  I: Integer;
 begin
-  case idx of
-    0: begin
-      Width := 30;
-      Height := 40;
-    end;
-    1: begin
-      Width := 40;
-      Height := 30;
-    end;
-    2: begin
-      Width := 150;
-      Height := 100;
-    end;
-    3: begin
-      Width := 100;
-      Height := 150;
-    end;
-  end;
+  S := edTamFoto.Items[idx];
+  I := pos('x',S);
+  Width := StrToInt(copy(S,1,I-1))*10;
+  Delete(S,1,I);
+  I := pos('c',S);
+  Height := StrToInt(copy(S,1,I-1))*10;
 end;
 
 procedure TForm1.calculaTamanhoMM(idx: Integer; var Width, Height: Integer);
@@ -309,7 +338,7 @@ end;
 
 procedure TForm1.ToolButton2Click(Sender: TObject);
 begin
-  ShellExecute(0, 'open', 'http://code.google.com/p/foto3x4', nil, nil, SW_SHOWNORMAL);
+  ShellExecute(0, 'open', 'http://fotos3x4.googlepages.com/', nil, nil, SW_SHOWNORMAL);
 end;
 
 end.

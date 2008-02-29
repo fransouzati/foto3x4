@@ -13,8 +13,8 @@ object Form1: TForm1
   OldCreateOrder = False
   Position = poScreenCenter
   ShowHint = True
-  OnCreate = FormCreate
   OnResize = FormResize
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object ToolBar1: TToolBar
@@ -63,15 +63,18 @@ object Form1: TForm1
       TabOrder = 2
       OnChange = edTamFotoChange
       Items.Strings = (
+        '2x2cm'
         '3x4cm'
         '4x3cm'
+        '5x7cm'
+        '7x5cm'
         '15x10cm'
         '10x15cm')
     end
     object btBorder: TToolButton
       Left = 155
       Top = 2
-      Hint = 'Previsualiza'#231#227'o'
+      Hint = 'Colocar uma borda na foto'
       AllowAllUp = True
       Caption = 'btBorder'
       Down = True
@@ -116,9 +119,9 @@ object Form1: TForm1
   end
   object Panel1: TPanel
     Left = 0
-    Top = 29
+    Top = 52
     Width = 752
-    Height = 517
+    Height = 494
     Align = alClient
     BevelOuter = bvNone
     Caption = ' '
@@ -159,6 +162,40 @@ object Form1: TForm1
       Height = 311
       Align = alClient
       Stretch = True
+    end
+  end
+  object novaversao: TPanel
+    Left = 0
+    Top = 29
+    Width = 752
+    Height = 23
+    Align = alTop
+    BevelOuter = bvNone
+    Caption = ' '
+    Color = 9169649
+    TabOrder = 3
+    Visible = False
+    object Label1: TLabel
+      Left = 15
+      Top = 4
+      Width = 295
+      Height = 14
+      Caption = 'Existe uma nova vers'#227'o deste programa dispon'#237'vel para voc'#234'.'
+    end
+    object Label3: TLabel
+      Left = 319
+      Top = 4
+      Width = 118
+      Height = 14
+      Cursor = crHandPoint
+      Caption = 'Clique aqui para baix'#225'-la.'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clNavy
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsUnderline]
+      ParentFont = False
+      OnClick = ToolButton2Click
     end
   end
   object ImageList1: TImageList

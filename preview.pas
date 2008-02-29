@@ -46,7 +46,7 @@ uses main;
 procedure TForm2.FormCreate(Sender: TObject);
 begin
   edPapel.Items.Text := form1.edTamFoto.Items.Text;
-  edPapel.ItemIndex := 2;
+  edPapel.ItemIndex := edPapel.Items.IndexOf('10x15cm');
   imgPos.X := -1;
 end;
 
