@@ -61,7 +61,7 @@ object Form2: TForm2
       Width = 74
       Height = 22
       Hint = 'Margem'
-      Max = 20
+      Max = 40
       Position = 5
       TabOrder = 2
       TickStyle = tsNone
@@ -73,7 +73,7 @@ object Form2: TForm2
       Width = 74
       Height = 22
       Hint = 'Espa'#231'amento'
-      Max = 20
+      Max = 40
       Position = 5
       TabOrder = 3
       TickStyle = tsNone
