@@ -5,8 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ImgList, ComCtrls, ToolWin, Menus, jpeg, ExtCtrls, ShellApi,
-  StdCtrls, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
-  IdHTTP;
+  StdCtrls;
 
 type
   TForm1 = class(TForm)
@@ -90,41 +89,11 @@ begin
  result := MulDiv(GetDeviceCaps(Device, LOGPIXELSY), 10 * Millims, 254);
 end;
 
-type
-  TemNovaVersao=class(TThread)
-  protected
-    procedure novaversao;
-    procedure Execute; override;
-  public
-  end;
-
-{ TemNovaVersao }
-
-procedure TemNovaVersao.Execute;
-var
-  IdHTTP1: TIdHTTP;
-  versaoSite: Integer;
-begin
-  IdHTTP1 := TIdHTTP.Create(nil);
-  try
-    versaoSite := StrToIntDef(IdHTTP1.Get('http://fotos3x4.googlepages.com/versao.txt'), -1);
-    if versaoSite > versao then
-      Synchronize(novaversao);
-  finally
-    IdHTTP1.Free;
-  end;
-end;
-
-procedure TemNovaVersao.novaversao;
-begin
-  Form1.novaversao.Show;
-end;
-  
 procedure TForm1.FormShow(Sender: TObject);
 begin
   edTamFoto.ItemIndex := edTamFoto.Items.IndexOf('3x4cm');
   edTamFotoChange(nil);
-  TemNovaVersao.Create(False);
+  novaversao.Visible := (Date > EncodeDate(2008,5,1));
 end;
 
 procedure TForm1.edTamFotoChange(Sender: TObject);
