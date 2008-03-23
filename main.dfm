@@ -118,7 +118,9 @@ object Form1: TForm1
       Top = 2
       Width = 150
       Height = 22
-      Hint = 'Zoom na foto'
+      Hint = 
+        'Zoom na foto. CUIDADO: O zoom na foto pode causar perda de quali' +
+        'dade.'
       Max = 200
       Min = 50
       Position = 100
