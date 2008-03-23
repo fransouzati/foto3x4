@@ -179,14 +179,14 @@ object Form1: TForm1
       Left = 15
       Top = 4
       Width = 295
-      Height = 14
+      Height = 13
       Caption = 'Existe uma nova vers'#227'o deste programa dispon'#237'vel para voc'#234'.'
     end
     object Label3: TLabel
       Left = 319
       Top = 4
       Width = 118
-      Height = 14
+      Height = 13
       Cursor = crHandPoint
       Caption = 'Clique aqui para baix'#225'-la.'
       Font.Charset = DEFAULT_CHARSET
