@@ -58,7 +58,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure btCameraClick(Sender: TObject);
     procedure tmcamTimer(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     imgPos, fotoPos: TPoint;
     fotoW: Integer;
@@ -385,18 +385,16 @@ end;
 
 procedure TForm1.WMUSER(var Msg: TMsg);
 begin
- showmessage(inttostr(msg.wParam));
   if msg.wParam = 1 then
     btAbreArquivo.Click
   else if msg.wParam = 2 then
   begin
-    showmessage('camera');
     btCamera.Down := True;
     btCameraClick(nil);
   end;
 end;
 
-procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
+procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   ClienteEsperando:= '';
   ClienteResposta:= 'Erro: Abortado pelo usuário';
