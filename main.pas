@@ -5,12 +5,12 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ImgList, ComCtrls, ToolWin, Menus, jpeg, ExtCtrls, ShellApi,
-  StdCtrls;
+  StdCtrls, JLCVideo, DdeMan;
 
 type
   TForm1 = class(TForm)
     ToolBar1: TToolBar;
-    ToolButton1: TToolButton;
+    btAbreArquivo: TToolButton;
     btPreview: TToolButton;
     ImageList1: TImageList;
     OpenDialog1: TOpenDialog;
@@ -23,13 +23,16 @@ type
     imgPreview: TImage;
     tmPreview: TTimer;
     btBorder: TToolButton;
-    ToolButton2: TToolButton;
+    btAbout: TToolButton;
     edTamFoto: TComboBox;
     Label2: TLabel;
     novaversao: TPanel;
     Label1: TLabel;
     Label3: TLabel;
-    procedure ToolButton1Click(Sender: TObject);
+    btCamera: TToolButton;
+    tmcam: TTimer;
+    DdeServerConv1: TDdeServerConv;
+    procedure btAbreArquivoClick(Sender: TObject);
     procedure zoomimgChange(Sender: TObject);
     procedure imgMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -49,14 +52,19 @@ type
     procedure FormResize(Sender: TObject);
     procedure tmPreviewTimer(Sender: TObject);
     procedure btBorderClick(Sender: TObject);
-    procedure ToolButton2Click(Sender: TObject);
+    procedure btAboutClick(Sender: TObject);
     procedure edTamFotoChange(Sender: TObject);
     procedure edPapelChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure btCameraClick(Sender: TObject);
+    procedure tmcamTimer(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     imgPos, fotoPos: TPoint;
     fotoW: Integer;
     FotoH: Integer;
+    jlcvideo: TJLCVideo;
+    procedure WMUSER(var Msg: TMsg); message WM_USER;
   public
     procedure MontaFoto;
     procedure calculaTamanho(idx: Integer; var Width, Height: Integer);
@@ -69,6 +77,9 @@ type
 
 var
   Form1: TForm1;
+  ClienteEsperando: String = '';
+  ClienteResposta: String = '';
+
 const
   versao=
 {$INCLUDE versao.txt}
@@ -141,8 +152,10 @@ begin
   end;
 end;
 
-procedure TForm1.ToolButton1Click(Sender: TObject);
+procedure TForm1.btAbreArquivoClick(Sender: TObject);
 begin
+  btCamera.Down := False;
+  tmcam.Enabled := False;
   if OpenDialog1.Execute then
   begin
     img.Left := 0;
@@ -150,7 +163,7 @@ begin
     img.Picture.LoadFromFile(OpenDialog1.FileName);
     foto.Left :=0 ;
     foto.Top :=0 ;
-    zoomImg.Position := 25;
+    //zoomImg.Position := 25;
     zoomFoto.Position := 100;
     zoomImgChange(nil);
     zoomFotoChange(nil);
@@ -160,6 +173,7 @@ end;
 
 procedure TForm1.zoomimgChange(Sender: TObject);
 begin
+  zoomImg.Hint := 'Zoom geral'#13+'Atual: '+IntToStr(zoomImg.Position);
   img.Width  := MulDiv(img.Picture.Width, zoomImg.Position, 100);
   img.Height := MulDiv(img.Picture.Height, zoomImg.Position, 100);
   pnPreview.ClientWidth := foto.Width;
@@ -191,6 +205,8 @@ end;
 
 procedure TForm1.btBorderClick(Sender: TObject);
 begin
+  btCamera.Down := False;
+  tmcam.Enabled := False;
   tmPreview.Enabled := False;
   tmPreview.Enabled := True;
 end;
@@ -301,13 +317,89 @@ end;
 
 procedure TForm1.btPreviewClick(Sender: TObject);
 begin
+  btCamera.Down := False;
+  tmcam.Enabled := False;
   Form2.MontaPapel;
+  if ClienteEsperando <> '' then
+  begin
+    Form2.img.Picture.SaveToFile(ClienteEsperando);
+    ClienteResposta := 'ok';
+    ClienteEsperando := '';
+    exit;
+  end;
   Form2.Show;
 end;
 
-procedure TForm1.ToolButton2Click(Sender: TObject);
+procedure TForm1.btAboutClick(Sender: TObject);
 begin
+  btCamera.Down := False;
+  tmcam.Enabled := False;
   ShellExecute(0, 'open', 'http://fotos3x4.googlepages.com/', nil, nil, SW_SHOWNORMAL);
+end;
+
+procedure TForm1.btCameraClick(Sender: TObject);
+var
+  temp: String;
+begin
+  if jlcvideo = nil then
+  begin
+    jlcvideo := TJLCVideo.Create(Self);
+    jlcvideo.Visible := False;
+    jlcvideo.Parent := Self;
+    jlcvideo.Align := alClient;
+    jlcvideo.Overlay := True;
+    jlcvideo.Activo := True;
+    jlcvideo.EscalaPreview := False;
+    temp := GetEnvironmentVariable('TEMP');
+    if temp = '' then
+      temp := 'C:\TEMP';
+    ForceDirectories(temp);
+    jlcvideo.FicheroImagen := temp+'\camera.bmp';
+    OpenDialog1.FileName := jlcvideo.FicheroImagen;
+  end;
+  if btCamera.Down then
+  begin
+    img.Left := 0;
+    img.Top := 0;
+    img.Picture.Graphic := nil;
+    foto.Left :=0 ;
+    foto.Top :=0 ;
+    //zoomImg.Position := 25;
+    zoomFoto.Position := 100;
+    zoomImgChange(nil);
+    zoomFotoChange(nil);
+    btPreview.Enabled := True;
+    tmcam.Enabled := True;
+  end
+  else begin
+    tmcam.Enabled := False;
+  end;
+end;
+
+procedure TForm1.tmcamTimer(Sender: TObject);
+begin
+  jlcvideo.GrabarImagenDisco;
+  img.Picture.LoadFromFile(jlcvideo.FicheroImagen);
+  zoomImgChange(nil);
+end;
+
+procedure TForm1.WMUSER(var Msg: TMsg);
+begin
+ showmessage(inttostr(msg.wParam));
+  if msg.wParam = 1 then
+    btAbreArquivo.Click
+  else if msg.wParam = 2 then
+  begin
+    showmessage('camera');
+    btCamera.Down := True;
+    btCameraClick(nil);
+  end;
+end;
+
+procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  ClienteEsperando:= '';
+  ClienteResposta:= 'Erro: Abortado pelo usuário';
 end;
 
 end.
