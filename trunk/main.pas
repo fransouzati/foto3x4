@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ImgList, ComCtrls, ToolWin, Menus, jpeg, ExtCtrls, ShellApi,
-  StdCtrls, JLCVideo, DdeMan;
+  StdCtrls, JLCVideo, DdeMan, OleCtrls, SHDocVw, EmbeddedWB;
 
 type
   TForm1 = class(TForm)
@@ -26,12 +26,12 @@ type
     btAbout: TToolButton;
     edTamFoto: TComboBox;
     Label2: TLabel;
-    novaversao: TPanel;
-    Label1: TLabel;
-    Label3: TLabel;
     btCamera: TToolButton;
     tmcam: TTimer;
     DdeServerConv1: TDdeServerConv;
+    wb: TEmbeddedWB;
+    ToolBar2: TToolBar;
+    ToolButton1: TToolButton;
     procedure btAbreArquivoClick(Sender: TObject);
     procedure zoomimgChange(Sender: TObject);
     procedure imgMouseDown(Sender: TObject; Button: TMouseButton;
@@ -59,6 +59,12 @@ type
     procedure btCameraClick(Sender: TObject);
     procedure tmcamTimer(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    function wbTranslateUrl(const dwTranslate: Cardinal;
+      const pchURLIn: PWideChar; var ppchURLOut: PWideChar): HRESULT;
+    procedure ToolButton1Click(Sender: TObject);
+    function wbShowMessage(hwnd: Cardinal; lpstrText,
+      lpstrCaption: PWideChar; dwType: Integer; lpstrHelpFile: PWideChar;
+      dwHelpContext: Integer; var plResult: Integer): HRESULT;
   private
     imgPos, fotoPos: TPoint;
     fotoW: Integer;
@@ -83,7 +89,7 @@ var
 const
   versao=
 {$INCLUDE versao.txt}
-;  
+;
 implementation
 
 uses preview;
@@ -104,7 +110,7 @@ procedure TForm1.FormShow(Sender: TObject);
 begin
   edTamFoto.ItemIndex := edTamFoto.Items.IndexOf('3x4cm');
   edTamFotoChange(nil);
-  novaversao.Visible := (Date > EncodeDate(2008,5,1));
+  wb.Navigate('http://fotos3x4.googlepages.com/versao1008.html');
 end;
 
 procedure TForm1.edTamFotoChange(Sender: TObject);
@@ -194,13 +200,28 @@ end;
 
 procedure TForm1.tmPreviewTimer(Sender: TObject);
 begin
-  tmPreview.Enabled := False;
-  pnPreview.Visible := img.Picture.Graphic <> nil;
-  if not pnPreview.Visible then
-    exit;
-  pnPreview.Left := ClientWidth-pnPreview.Width;
-  pnPreview.Top := 0;
-  MontaFoto;
+  if ToolBar2.Visible then
+  begin
+    wb.BoundsRect := ClientRect;
+  end
+  else
+  begin
+    wb.Left := ClientWidth-200;
+    tmPreview.Enabled := False;
+    pnPreview.Visible := img.Picture.Graphic <> nil;
+    if pnPreview.Visible then
+    begin
+      wb.Top := pnPreview.Height;
+      wb.Height := ClientHeight - pnPreview.Height - 1;
+      pnPreview.Left := ClientWidth - pnPreview.Width;
+      pnPreview.Top := 0;
+      MontaFoto;
+    end
+    else begin
+      wb.Top := 0;
+      wb.Height := ClientHeight - 1;
+    end;
+  end;
 end;
 
 procedure TForm1.btBorderClick(Sender: TObject);
@@ -398,6 +419,41 @@ procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   ClienteEsperando:= '';
   ClienteResposta:= 'Erro: Abortado pelo usuário';
+end;
+
+function TForm1.wbTranslateUrl(const dwTranslate: Cardinal;
+  const pchURLIn: PWideChar; var ppchURLOut: PWideChar): HRESULT;
+var
+  W: WideString;
+begin
+  W := pchURLIn;
+  if copy(w,1, 18) = 'res://ieframe.dll/' then
+  begin
+    wb.Hide
+  end
+  else if (pos('google', W) = 0) then
+  begin
+    wb.UserInterfaceOptions := [NO3DBORDER,OPENNEWWIN,NO3DOUTERBORDER];
+    ToolBar2.Visible := dwTranslate<>-12;
+    ToolBar1.Visible := False;
+  end;
+  tmPreviewTimer(nil);
+end;
+
+procedure TForm1.ToolButton1Click(Sender: TObject);
+begin
+  ToolBar1.Visible := True;
+  ToolBar2.Visible := False;
+  wb.UserInterfaceOptions := [NO3DBORDER,SCROLL_NO,OPENNEWWIN,NO3DOUTERBORDER];
+  wb.Navigate('http://fotos3x4.googlepages.com/versao1008.html');
+  tmPreviewTimer(nil);
+end;
+
+function TForm1.wbShowMessage(hwnd: Cardinal; lpstrText,
+  lpstrCaption: PWideChar; dwType: Integer; lpstrHelpFile: PWideChar;
+  dwHelpContext: Integer; var plResult: Integer): HRESULT;
+begin
+  ShowMessage(WideString(lpstrCaption));
 end;
 
 end.
