@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 245
-  Top = 103
+  Left = 356
+  Top = 231
   Width = 760
   Height = 580
   Caption = 'Foto 3x4'
@@ -38,6 +38,7 @@ object Form1: TForm1
     object btCamera: TToolButton
       Left = 26
       Top = 2
+      Hint = 'Use sua c'#226'mera'
       AllowAllUp = True
       Caption = 'btCamera'
       ImageIndex = 5
@@ -131,9 +132,9 @@ object Form1: TForm1
   end
   object Panel1: TPanel
     Left = 0
-    Top = 52
+    Top = 58
     Width = 752
-    Height = 494
+    Height = 488
     Align = alClient
     BevelOuter = bvNone
     Caption = ' '
@@ -176,38 +177,46 @@ object Form1: TForm1
       Stretch = True
     end
   end
-  object novaversao: TPanel
+  object wb: TEmbeddedWB
+    Left = 502
+    Top = 29
+    Width = 250
+    Height = 517
+    TabOrder = 3
+    DownloadOptions = [DLCTL_DLIMAGES, DLCTL_VIDEOS, DLCTL_BGSOUNDS]
+    UserInterfaceOptions = [NO3DBORDER, SCROLL_NO, OPENNEWWIN, NO3DOUTERBORDER]
+    OnTranslateUrl = wbTranslateUrl
+    OnShowMessage = wbShowMessage
+    PrintOptions.HTMLHeader.Strings = (
+      '<HTML></HTML>')
+    PrintOptions.Orientation = poPortrait
+    ReplaceCaption = False
+    EnableDDE = False
+    fpExceptions = True
+    ControlData = {
+      4C000000D71900006F3500000000000000000000000000000000000000000000
+      000000004C000000000000000000000001000000E0D057007335CF11AE690800
+      2B2E126200000000000000004C0000000114020000000000C000000000000046
+      8000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000100000000000000000000000000000000000000}
+  end
+  object ToolBar2: TToolBar
     Left = 0
     Top = 29
     Width = 752
-    Height = 23
-    Align = alTop
-    BevelOuter = bvNone
-    Caption = ' '
-    Color = 9169649
-    TabOrder = 3
+    Height = 29
+    ButtonHeight = 21
+    ButtonWidth = 40
+    Caption = 'ToolBar2'
+    ShowCaptions = True
+    TabOrder = 4
     Visible = False
-    object Label1: TLabel
-      Left = 15
-      Top = 4
-      Width = 295
-      Height = 13
-      Caption = 'Existe uma nova vers'#227'o deste programa dispon'#237'vel para voc'#234'.'
-    end
-    object Label3: TLabel
-      Left = 319
-      Top = 4
-      Width = 118
-      Height = 13
-      Cursor = crHandPoint
-      Caption = 'Clique aqui para baix'#225'-la.'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clNavy
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsUnderline]
-      ParentFont = False
-      OnClick = btAboutClick
+    object ToolButton1: TToolButton
+      Left = 0
+      Top = 2
+      Caption = ' Voltar '
+      ImageIndex = 0
+      OnClick = ToolButton1Click
     end
   end
   object ImageList1: TImageList

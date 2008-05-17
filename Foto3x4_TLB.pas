@@ -12,7 +12,7 @@ unit Foto3x4_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 23/3/2008 18:08:59 from Type Library described below.
+// File generated on 3/5/2008 17:19:51 from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Qualiom\Freewares\Foto3x4\Foto3x4.tlb (1)
@@ -22,8 +22,6 @@ unit Foto3x4_TLB;
 // HelpString: Foto3x4 Library
 // DepndLst: 
 //   (1) v2.0 stdole, (C:\WINDOWS\system32\stdole2.tlb)
-//   (2) v4.0 StdVCL, (C:\WINDOWS\system32\stdvcl40.dll)
-//   (3) v4.0 StdVCL, (C:\WINDOWS\system32\stdvcl40.dll)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
